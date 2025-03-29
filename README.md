@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📦 Next.js File organizer
 
-## Getting Started
+Este proyecto es una API en **Next.js con TypeScript** que permite subir, descomprimir y organizar archivos en categorías específicas, generando un archivo ZIP con la estructura organizada.
 
-First, run the development server:
+## 🚀 Características
+- 📂 **Subida y descompresión de archivos** en la carpeta `uploads/unzipped`.
+- 🏷 **Clasificación automática** de archivos en imágenes, videos, documentos y otros.
+- 📦 **Generación de un ZIP** con la estructura organizada.
+- 🗑 **Eliminación automática** de los archivos originales después de la compresión.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 📌 Instalación
+
+### 1️⃣ Clonar el repositorio:
+```sh
+git clone https://github.com/tomii-dev-fullstack/-file-organizer.git
+cd -file-organizer
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Instalar dependencias:
+```sh
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3️⃣ Ejecutar el servidor en desarrollo:
+```sh
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+La API se ejecutará en **http://localhost:3000**.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Estructura del proyecto
+```
+-file-organizer/
+├── pages/
+│   ├── api/
+│   │   ├── upload_file.ts   # Endpoint para subir archivos
+│   │   ├── download_zip.ts # Endpoint para generar y descargar el ZIP
+│   ├── index.tsx       # Página principal (si aplica)
+├── uploads/            # Carpeta donde se descomprimen los archivos
+├── public/
+│   ├── organized_files.zip # Archivo ZIP generado
+│   ├── categorized_files.ts  # Función para clasificar archivos
+├── README.md           # Documentación del proyecto
+├── next.config.js      # Configuración de Next.js
+├── tsconfig.json       # Configuración de TypeScript
+├── package.json        # Dependencias y scripts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📌 Uso de la API
 
-## Deploy on Vercel
+### 🔹 Subir un archivo comprimido
+- **Método:** `POST`
+- **URL:** `/api/upload_file`
+- **Body:** `multipart/form-data`
+- **Respuesta exitosa:** `{ message: "Archivo subido y descomprimido" }`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔹 Descargar el archivo ZIP organizado
+- **Método:** `POST`
+- **URL:** `/api/download_zip`
+- **Respuesta exitosa:** `{ message: "ZIP creado con éxito", downloadUrl: "/organized_files.zip" }`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ Configuración adicional
+Si deseas cambiar las extensiones de archivos soportadas, edita `upload_file.ts` en la carpeta `src/pages/api`.
+
+---
+
+## 🛠 Tecnologías usadas
+- **Next.js** 🚀
+- **TypeScript** 🦾
+- **Archiver.js** (para comprimir archivos ZIP)
+- **Node.js File System (fs)** 📂
+
+---
+
+## 📜 Licencia
+Este proyecto está bajo la licencia MIT. Puedes usarlo y modificarlo libremente.
+
+---
+
+## ✨ Autor
+👨‍💻 Desarrollado por **Tomás Ruglio (https://github.com/tomii-dev-fullstack)**. ¡Contribuciones y mejoras son bienvenidas! 😊
+
