@@ -15,7 +15,7 @@ Este proyecto es una API en **Next.js con TypeScript** que permite subir, descom
 ### 1️⃣ Clonar el repositorio:
 ```sh
 git clone https://github.com/tomii-dev-fullstack/-file-organizer.git
-cd nextjs-file-organizer
+cd -file-organizer
 ```
 
 ### 2️⃣ Instalar dependencias:
