@@ -121,7 +121,7 @@ export default function Home() {
           {uploading && <p>Cargando...</p>}
 
         </div>
-        <button onClick={handleDownload} className="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700">
+        <button onClick={handleDownload} disabled={subFolders.length === 0} className="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700">
           Descargar ZIP ordenado
         </button>
 

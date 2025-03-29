@@ -18,7 +18,29 @@ function deleteFolderRecursive(folderPath: string) {
         fs.rmdirSync(folderPath); // Eliminar carpeta vacía
     }
 }
+export const deletePublicFiles = () => {
+    const publicPath = path.join(process.cwd(), "public");
 
+    if (!fs.existsSync(publicPath)) {
+        console.log("La carpeta 'public/' no existe.");
+        return;
+    }
+
+    // Obtener solo los archivos (y no directorios) dentro de public/
+    const files = fs.readdirSync(publicPath);
+
+    files.forEach((file) => {
+        const filePath = path.join(publicPath, file);
+
+        // Solo eliminar si es un archivo, no directorio
+        if (fs.statSync(filePath).isFile()) {
+            fs.unlinkSync(filePath); // Eliminar archivo
+            console.log(`🗑 Archivo eliminado: ${filePath}`);
+        }
+    });
+
+    console.log("✅ Todos los archivos en 'public/' han sido eliminados.");
+};
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {
         return res.status(405).json({ message: "Método no permitido" });
@@ -73,18 +95,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(500).json({ message: "Error al generar el ZIP", error: err.message });
         });
 
+
         output.on("close", () => {
             console.log(`Archivo ZIP generado: ${zipPath}`);
 
-            // **Eliminar la carpeta después de generar el ZIP**
-            deleteFolderRecursive(unzipPath);
+            // Esperar a que el archivo se haya descargado antes de eliminar
+            setTimeout(() => {
+                // **Eliminar la carpeta después de generar el ZIP**
+                deleteFolderRecursive(unzipPath);
+                deletePublicFiles();
+            }, 3000); // Espera 3 segundos antes de eliminar para asegurar que el archivo se descargó
 
             res.status(200).json({
                 message: "ZIP creado con éxito",
                 downloadUrl: "/organized_files.zip",
             });
         });
-
         archive.on("error", (err) => {
             console.error("Error al generar el archivo ZIP:", err);
             res.status(500).json({ message: "Error al generar el ZIP", error: err.message });
