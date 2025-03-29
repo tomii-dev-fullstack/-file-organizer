@@ -32,7 +32,7 @@ La API se ejecutará en **http://localhost:3000**.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del proyecto
 ```
 -file-organizer/
 ├── pages/
