@@ -18,8 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const form = new IncomingForm();
-  const uploadsDir = path.join(process.cwd(), 'tmp');
-
+  /* const uploadsDir = path.join(process.cwd(), 'tmp'); */
+  const uploadsDir = "/tmp";  // Usar /tmp en Netlify
   /*   if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
@@ -54,76 +54,76 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(filePath)
     try {
       // Si el archivo es un ZIP, descomprimimos el archivo y obtenemos los nombres de las carpetas dentro de la carpeta interior
-     /*  if (fileExtension === '.zip') {
-        const zipFolderPath = path.join(uploadsDir, 'unzipped', uploadedFile.originalFilename ?? '');
+      /*  if (fileExtension === '.zip') {
+         const zipFolderPath = path.join(uploadsDir, 'unzipped', uploadedFile.originalFilename ?? '');
+         if (!fs.existsSync(zipFolderPath)) {
+           fs.mkdirSync(zipFolderPath, { recursive: true });
+         }
+ 
+         // Descomprimir el archivo .zip
+         const zipFileStream = fs.createReadStream(filePath);
+         const zipExtractStream = unzipper.Extract({ path: zipFolderPath });
+ 
+         zipFileStream.pipe(zipExtractStream);
+ 
+         zipExtractStream.on('close', async () => {
+           try {
+             // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
+             const directoryStructure = listDirectoryStructure(zipFolderPath);
+             const categorizedStructure = categorizeFiles(directoryStructure);
+             return res.status(200).json({
+               message: 'Estructura de archivos obtenida exitosamente',
+               structure: categorizedStructure
+             });
+           } catch (error) {
+             return res.status(500).json({
+               message: 'Error al leer la estructura del directorio',
+               error: error
+             });
+           }
+         });
+ 
+         zipExtractStream.on('error', (error) => {
+           return res.status(500).json({ message: 'Error al descomprimir el archivo ZIP', error: error.message });
+         });
+ 
+         return; // Terminamos el flujo aquí ya que estamos esperando la extracción
+       } */
+      if (fileExtension === ".zip") {
+        const zipFolderPath = path.join(uploadsDir, "unzipped", uploadedFile.originalFilename ?? "");
+
         if (!fs.existsSync(zipFolderPath)) {
           fs.mkdirSync(zipFolderPath, { recursive: true });
         }
 
-        // Descomprimir el archivo .zip
-        const zipFileStream = fs.createReadStream(filePath);
-        const zipExtractStream = unzipper.Extract({ path: zipFolderPath });
+        try {
+          // Descomprimir el archivo .zip
+          await new Promise((resolve, reject) => {
+            const zipFileStream = fs.createReadStream(filePath);
+            const zipExtractStream = unzipper.Extract({ path: zipFolderPath });
 
-        zipFileStream.pipe(zipExtractStream);
+            zipFileStream.pipe(zipExtractStream);
 
-        zipExtractStream.on('close', async () => {
-          try {
-            // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
-            const directoryStructure = listDirectoryStructure(zipFolderPath);
-            const categorizedStructure = categorizeFiles(directoryStructure);
-            return res.status(200).json({
-              message: 'Estructura de archivos obtenida exitosamente',
-              structure: categorizedStructure
-            });
-          } catch (error) {
-            return res.status(500).json({
-              message: 'Error al leer la estructura del directorio',
-              error: error
-            });
-          }
-        });
+            zipExtractStream.on("close", resolve);
+            zipExtractStream.on("error", reject);
+          });
 
-        zipExtractStream.on('error', (error) => {
-          return res.status(500).json({ message: 'Error al descomprimir el archivo ZIP', error: error.message });
-        });
+          // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
+          const directoryStructure = listDirectoryStructure(zipFolderPath);
+          const categorizedStructure = categorizeFiles(directoryStructure);
 
-        return; // Terminamos el flujo aquí ya que estamos esperando la extracción
-      } */
-        if (fileExtension === ".zip") {
-          const zipFolderPath = path.join(uploadsDir, "unzipped", uploadedFile.originalFilename ?? "");
-        
-          if (!fs.existsSync(zipFolderPath)) {
-            fs.mkdirSync(zipFolderPath, { recursive: true });
-          }
-        
-          try {
-            // Descomprimir el archivo .zip
-            await new Promise((resolve, reject) => {
-              const zipFileStream = fs.createReadStream(filePath);
-              const zipExtractStream = unzipper.Extract({ path: zipFolderPath });
-        
-              zipFileStream.pipe(zipExtractStream);
-        
-              zipExtractStream.on("close", resolve);
-              zipExtractStream.on("error", reject);
-            });
-        
-            // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
-            const directoryStructure = listDirectoryStructure(zipFolderPath);
-            const categorizedStructure = categorizeFiles(directoryStructure);
-        
-            return res.status(200).json({
-              message: "Estructura de archivos obtenida exitosamente",
-              structure: categorizedStructure,
-            });
-          } catch (error) {
-            return res.status(500).json({
-              message: "Error al descomprimir el archivo ZIP o leer la estructura",
-              error: error instanceof Error ? error.message : error,
-            });
-          }
+          return res.status(200).json({
+            message: "Estructura de archivos obtenida exitosamente",
+            structure: categorizedStructure,
+          });
+        } catch (error) {
+          return res.status(500).json({
+            message: "Error al descomprimir el archivo ZIP o leer la estructura",
+            error: error instanceof Error ? error.message : error,
+          });
         }
-        
+      }
+
       return res.status(400).json({ message: 'El archivo no es un ZIP válido.' });
     } catch (error) {
       return res.status(500).json({
