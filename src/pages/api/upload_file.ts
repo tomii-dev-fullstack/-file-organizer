@@ -20,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const form = new IncomingForm();
   const uploadsDir = path.join(process.cwd(), 'tmp');
 
-  if (!fs.existsSync(uploadsDir)) {
+/*   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
-
+ */
   form.keepExtensions = true; // Mantener las extensiones del archivo
 
   form.parse(req, async (err: any, fields: any, files: { [key: string]: FormidableFile | FormidableFile[] }) => {
