@@ -65,41 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         zipFileStream.pipe(zipExtractStream);
 
-        /*         zipExtractStream.on('close', async () => {
-                  // Leer todo el contenido descomprimido para obtener los nombres de las carpetas
-                  const filesInZip = fs.readdirSync(zipFolderPath);
-        
-                  // Filtramos las carpetas dentro del directorio descomprimido
-                  const folders: string[] = filesInZip.filter((file) => {
-                    const fullPath = path.join(zipFolderPath, file);
-                    return fs.statSync(fullPath).isDirectory(); // Verificamos si es una carpeta
-                  });
-        
-                  if (folders.length === 0) {
-                    return res.status(400).json({ message: 'No se encontraron carpetas dentro del archivo ZIP.' });
-                  }
-        
-                  // Supongamos que solo hay una carpeta principal, la utilizamos como referencia
-                  const firstFolderName = folders[0];
-                  const dynamicFolderPath = path.join(zipFolderPath, firstFolderName);
-        
-                  // Ahora, leemos las subcarpetas dentro de esta carpeta dinámica
-                  const subFolders: string[] = [];
-                  const filesInDynamicFolder = fs.readdirSync(dynamicFolderPath);
-        
-                  // Iteramos sobre los archivos y directorios dentro de la carpeta dinámica
-                  filesInDynamicFolder.forEach((file) => {
-                    const fullPath = path.join(dynamicFolderPath, file);
-                    const stats = fs.statSync(fullPath);
-        
-                    // Si es un directorio, lo agregamos a la lista de carpetas
-                    if (stats.isDirectory()) {
-                      subFolders.push(file);
-                    }
-                  });
-        
-                  return res.status(200).json({ message: 'Subcarpetas encontradas', subfolders: subFolders });
-                }); */
+
         zipExtractStream.on('close', async () => {
           try {
             // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
