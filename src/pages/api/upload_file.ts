@@ -20,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const form = new IncomingForm();
   const uploadsDir = path.join(process.cwd(), 'tmp');
 
-/*   if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
- */
+  /*   if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+   */
   form.keepExtensions = true; // Mantener las extensiones del archivo
 
   form.parse(req, async (err: any, fields: any, files: { [key: string]: FormidableFile | FormidableFile[] }) => {
@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const zipExtractStream = unzipper.Extract({ path: zipFolderPath });
 
         zipFileStream.pipe(zipExtractStream);
-
+        console.log(zipExtractStream)
 
         zipExtractStream.on('close', async () => {
           try {
@@ -119,7 +119,7 @@ const listDirectoryStructure = (dirPath: string): any => {
 
 
 
- type FileStructure = { [key: string]: string | FileStructure };
+type FileStructure = { [key: string]: string | FileStructure };
 
 export interface CategorizedFiles {
   images: Record<string, string>;
