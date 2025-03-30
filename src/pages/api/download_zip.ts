@@ -47,9 +47,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const unzipPath = path.join(process.cwd(), "tmp/unzipped");
-        const zipPath = path.join(process.cwd(), "public", "organized_files.zip");
+        const unzipPath = '/tmp/unzipped';  // Usa '/tmp' como ruta temporal para Netlify
+        const zipPath = '/tmp/organized_files.zip';  // El ZIP también puede generarse en /tmp
 
+        /*    const unzipPath = path.join(process.cwd(), "tmp/unzipped");
+           const zipPath = path.join(process.cwd(), "public", "organized_files.zip");
+    */
         if (!fs.existsSync(unzipPath)) {
             return res.status(400).json({ message: "No se encontraron archivos descomprimidos." });
         }
