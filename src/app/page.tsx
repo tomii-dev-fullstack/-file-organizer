@@ -124,7 +124,7 @@ export default function Home() {
         <button onClick={handleDownload} disabled={subFolders.length === 0} className="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700">
           Descargar ZIP ordenado
         </button>
-
+        
         {/* Sección de lista de sugerencias */}
         <div className="p-6 border rounded-lg bg-gray-50">
           <h2 className="text-lg font-semibold mb-4">Estructura del ZIP ordenado</h2>

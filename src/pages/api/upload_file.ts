@@ -50,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const filePath = uploadedFile.filepath;
+    const publicDir = path.join(process.cwd(), 'public'); // Ruta a la carpeta 'public'
 
     console.log(filePath)
     try {
@@ -107,7 +108,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             zipExtractStream.on("close", resolve);
             zipExtractStream.on("error", reject);
           });
-
+          const destinationPath = path.join(publicDir, uploadedFile.originalFilename ?? "");
+        
+          // Verificamos si el archivo existe y lo movemos a la carpeta 'public'
+          if (fs.existsSync(filePath)) {
+            fs.rename(filePath, destinationPath, (err) => {
+              if (err) {
+                return res.status(500).json({
+                  message: "Error al mover el archivo a la carpeta public",
+                  error: err.message,
+                });
+              }
+            });
+          }
           // Obtener la estructura completa de carpetas y archivos dentro del ZIP descomprimido
           const directoryStructure = listDirectoryStructure(zipFolderPath);
           const categorizedStructure = categorizeFiles(directoryStructure);
