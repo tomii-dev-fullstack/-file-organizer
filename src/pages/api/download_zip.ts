@@ -98,8 +98,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(500).json({ message: "Error al generar el ZIP", error: err.message });
         });
 
-
         output.on("close", () => {
+            console.log(`Archivo ZIP generado en /tmp: ${zipPath}`);
+
+            // Mover el archivo ZIP a la carpeta 'public/'
+            const publicZipPath = path.join(process.cwd(), 'public', 'organized_files.zip');  // Ruta pública
+            fs.rename(zipPath, publicZipPath, (err) => {
+                if (err) {
+                    console.error("Error al mover el archivo ZIP a la carpeta public:", err);
+                    return res.status(500).json({ message: "Error al mover el ZIP", error: err.message });
+                }
+
+                console.log(`Archivo ZIP movido a public/: ${publicZipPath}`);
+
+                // Eliminar la carpeta temporal después de generar el ZIP
+                setTimeout(() => {
+                    deleteFolderRecursive(unzipPath);
+                    deletePublicFiles();
+                }, 3000); // Espera 3 segundos antes de eliminar
+
+                // Retorna la URL pública del ZIP
+                res.status(200).json({
+                    message: "ZIP creado con éxito",
+                    downloadUrl: "/organized_files.zip",  // Esta es la URL que debe estar disponible públicamente
+                });
+            });
+        });
+       /*  output.on("close", () => {
             console.log(`Archivo ZIP generado: ${zipPath}`);
 
             // Esperar a que el archivo se haya descargado antes de eliminar
@@ -113,7 +138,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 message: "ZIP creado con éxito",
                 downloadUrl: "/organized_files.zip",
             });
-        });
+        }); */
         archive.on("error", (err) => {
             console.error("Error al generar el archivo ZIP:", err);
             res.status(500).json({ message: "Error al generar el ZIP", error: err.message });
