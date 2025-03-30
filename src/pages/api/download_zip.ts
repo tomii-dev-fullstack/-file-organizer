@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const unzipPath = path.join(process.cwd(), "uploads/unzipped");
+        const unzipPath = path.join(process.cwd(), "temp/unzipped");
         const zipPath = path.join(process.cwd(), "public", "organized_files.zip");
 
         if (!fs.existsSync(unzipPath)) {

@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const form = new IncomingForm();
-  const uploadsDir = path.join(process.cwd(), 'uploads');
+  const uploadsDir = path.join(process.cwd(), 'temp');
 
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
